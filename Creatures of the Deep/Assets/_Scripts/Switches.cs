@@ -9,10 +9,13 @@ public class Switches : MonoBehaviour
     public static int hp;
     public GameObject explosion;
 
+	public GameObject door;
+
     // Use this for initialization
     void Start()
     {
         hp = 7;
+		door = GameObject.Find ("Door");
     }
 
     // Update is called once per frame
@@ -35,6 +38,7 @@ public class Switches : MonoBehaviour
         if (hp == 0)
         {
             Destroyed();
+
         }
     }
 
@@ -42,6 +46,7 @@ public class Switches : MonoBehaviour
     {
         Destroy(gameObject);
         Instantiate(explosion, transform.position, Quaternion.identity);
-        //Animate Door
+
+		door.GetComponentInChildren<Animator> ().SetTrigger ("Unlocked");
     }      
 }
