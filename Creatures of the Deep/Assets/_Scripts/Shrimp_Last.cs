@@ -2,28 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Shrimp_Last : MonoBehaviour
 {
     public int health = 1;
 
     public Transform myTransform;
     public GameObject powerUpPrefab;
-    public GameObject[] explosions = new GameObject[2];
+    public GameObject explosion;
 
     float speed = 10f;
 
     public static bool animTwo;
     public static bool animThree;
 
-    public static bool lastShrimp;
-
     // Use this for initialization
     void Start()
     {
-        myTransform = transform;
-        
+        SetWave();
 
-        lastShrimp = false;
+        myTransform = transform;
     }
 
     // Update is called once per frame
@@ -48,27 +45,6 @@ public class Enemy : MonoBehaviour
         {
             gameObject.GetComponent<Animator>().SetTrigger("Shrimp_1");
         }
-
-        //myTransform.position += transform.forward * 10 * Time.deltaTime;
-        //Vector3 currentPosition = transform.position;
-        //currentPosition.y += speed * Time.deltaTime;
-        //currentPosition.x += -10f * Time.deltaTime;
-        //transform.position = currentPosition;
-
-        // Changing direction
-        /*if (currentPosition.y < 0f)
-        {
-            // Move up
-            speed = Mathf.Abs(speed);
-        }
-        else if (currentPosition.y > 6)
-        {
-            // Move down
-            speed = -Mathf.Abs(speed);
-        }*/
-
-
-        //transform.rotation = Quaternion.Euler(currentPosition.x * 80, 0, 0);
     }
 
     void OnTriggerEnter(Collider other)
@@ -91,13 +67,25 @@ public class Enemy : MonoBehaviour
         GameObject powerUp = Instantiate(powerUpPrefab);
         powerUp.transform.position = transform.position;
 
-        Instantiate(explosions[0], transform.position, Quaternion.identity);
-        //Plane.enemyKills[0]++;
+        Instantiate(explosion, transform.position, Quaternion.identity);
+    
         // Parse the text of the scoreGT into an int
         int score = int.Parse(Main.scoreGT.text);
         score += 100;
 
         // Convert the score back to a string and display it
         Main.scoreGT.text = score.ToString();
+    }
+
+    void SetWave()
+    {
+        if (Main.waves == Waves.shrimp_1)
+
+            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_1");
+
+        else if (Main.waves == Waves.shrimp_2)
+            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_2");
+        else
+            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_3");
     }
 }

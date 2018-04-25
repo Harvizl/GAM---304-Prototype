@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
     public AudioSource[] sounds = new AudioSource[5];
     public Transform plane;
     public float yAxis;
-
+    
     void Start()
     {
         GameObject enemyExplosionSound = GameObject.Find("Enemy_Explosion");
@@ -23,12 +23,12 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x >= 15)
+        if (transform.position.x >= 14)
         {
             Destroy(gameObject);
         }
 
-        if (transform.position.x <= -15)
+        if (transform.position.x <= -14)
         {
             Destroy(gameObject);
         }
@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-         if (other.tag == "Enemy")
+        if (other.tag == "Enemy")
         {
             sounds[0].Play();
         }
@@ -64,13 +64,13 @@ public class Projectile : MonoBehaviour
             sounds[1].Play();
         }
 
-        if(other.tag == "Switch")
+        if (other.tag == "Switch")
         {
             sounds[1].Play();
             Switches.hp--;
             Destroy(gameObject);
-            Debug.Log("Ouch");
-            
+            Debug.Log(Switches.hp.ToString());
+
         }
     }
 }

@@ -20,8 +20,7 @@ public class Switches : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        Debug.Log(hp.ToString());
+    {        
         /*if (health == 0)
         {
             Destroyed();
@@ -35,7 +34,7 @@ public class Switches : MonoBehaviour
             health = 
         }*/
 
-        if (hp == 0)
+        if (hp <= 0)
         {
             Destroyed();
 
