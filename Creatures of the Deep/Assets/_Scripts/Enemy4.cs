@@ -86,14 +86,7 @@ public class Enemy4 : MonoBehaviour
         Destroy(gameObject);
 
         Instantiate(explosions[0], transform.position, Quaternion.identity);
-        Plane.enemyKills[3]++;
-
-        if (Plane.enemyKills[3] == 6)
-        {
-            GameObject powerUp = Instantiate(powerUpPrefab);
-            powerUp.transform.position = transform.position;
-        }
-
+        
         // Parse the text of the scoreGT into an int
         int score = int.Parse(Main.scoreGT.text);
         score += 100;

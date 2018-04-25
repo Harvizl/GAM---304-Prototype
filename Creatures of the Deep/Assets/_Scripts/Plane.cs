@@ -8,13 +8,17 @@ public class Plane : MonoBehaviour
     // Gets the Plane's Transform
     public Transform planeTransform;
 
-    // Lives
-    public int shieldLevel;
+    // Health
+    public bool shield;
+    public bool canDie;
+
+    // Audio
+    public AudioSource[] sounds = new AudioSource[6];
+    // Explosions
     public GameObject[] explosions = new GameObject[2];
 
-    // Bullet
+    // Shooting Cooldown
     public int shot = 1;
-    public bool shoot = false;
 
     // 1: Player_Bullet
     // 2: Player_Bullet_Ghost
@@ -26,49 +30,32 @@ public class Plane : MonoBehaviour
     // [0] = shootingSpeedBuffCount
     // [1] = movementSpeedBuffCount
     public static int[] buffCounts = new int[2];
-    public static int[] enemyKills = new int[4];
-    bool[] powerUps = new bool[5];
+    public bool twinBuff;
 
     public GameObject[] powerUpBuffs = new GameObject[4];
 
-    // 1: Twin Shot
-    // 2: Movementspeed Buff
-    // 3: Shield
+    // [0]: Twin Shot
+    // [1]: Movementspeed Buff
+    // [2]: Shield
     GameObject[] powerUpGOs = new GameObject[3];
     public static int buffCount = 0;
 
-    // Audio
-    public AudioSource[] sounds = new AudioSource[6];
+    
 
     void Awake()
     {
-        planeTransform = GameObject.Find("Plane").GetComponent<Transform>();
-        //shieldGO = GameObject.Find("Shield");
+        planeTransform = GetComponent<Transform>();
     }
 
     // Use this for initialization
     void Start()
     {
-        shieldLevel = 1;
-
-        enemyKills[0] = 0;
-        enemyKills[1] = 0;
-        enemyKills[2] = 0;
-        enemyKills[3] = 0;
+        // Start with Shield
+        shield = true;
+        canDie = false;
 
         // Shoot Speed Buff
-        powerUps[0] = false;
-        powerUps[1] = false;
-
-        // Twin Shot Gun
-        /*powerUps[2] = false;
-        powerUpGOs[0] = GameObject.Find("Power Up Gun EGO");
-        powerUpGOs[0].SetActive(false);
-
-        // Tri Shot Gun
-        powerUps[3] = false;
-        powerUpGOs[1] = GameObject.Find("Power Up Gun EGO 1");
-        powerUpGOs[1].SetActive(false);*/
+        twinBuff = false;
 
         // Shield
         powerUpGOs[2] = GameObject.Find("Shield");
@@ -81,22 +68,17 @@ public class Plane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Movement
         Move();
 
         // Shield health
-        if (shieldLevel >= 1)
+        if (shield)
         {
             powerUpGOs[2].SetActive(true);
         }
-        else if (shieldLevel == 0)
+        else
         {
             powerUpGOs[2].SetActive(false);
-        }
-        else if (shieldLevel <= 0)
-        {
-            Destroy(gameObject);
-            sounds[0].Play();
-            Instantiate(explosions[0], transform.position, Quaternion.identity);
         }
 
         // Restricts players movement
@@ -119,23 +101,14 @@ public class Plane : MonoBehaviour
         {
             StartCoroutine(Shoot());
 
-            if (powerUps[2])
+            if (twinBuff)
             {
                 TwinBuff();
             }
-
-            /*if (powerUps[3])
-            {
-                TriBuff();
-            }*/
         }
     }
 
-    void FixedUpdate()
-    {
-
-    }
-
+    //////////MOVEMENT//////////
     void Move()
     {
         // pull information from the input class
@@ -146,8 +119,8 @@ public class Plane : MonoBehaviour
         {
             // Change transform.position based on the axes
             Vector3 pos = transform.position;
-            pos.y += yAxis * 7f * Time.deltaTime;
-            pos.x += xAxis * 7f * Time.deltaTime;
+            pos.y += yAxis * 6f * Time.deltaTime;
+            pos.x += xAxis * 6f * Time.deltaTime;
             transform.position = pos;
         }
         else if (buffCounts[1] == 1)
@@ -160,27 +133,28 @@ public class Plane : MonoBehaviour
         else if (buffCounts[1] == 2)
         {
             Vector3 pos = transform.position;
-            pos.y += yAxis * 9f * Time.deltaTime;
-            pos.x += xAxis * 9f * Time.deltaTime;
-            transform.position = pos;
-        }
-        else if (buffCounts[1] == 3)
-        {
-            Vector3 pos = transform.position;
             pos.y += yAxis * 10f * Time.deltaTime;
             pos.x += xAxis * 10f * Time.deltaTime;
+            transform.position = pos;
+        }
+        else
+        {
+            Vector3 pos = transform.position;
+            pos.y += yAxis * 15f * Time.deltaTime;
+            pos.x += xAxis * 15f * Time.deltaTime;
             transform.position = pos;
         }
         // Rotate the ship to make it feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * 30, 0, xAxis * -12);
     }
+    //////////MOVEMENT//////////
 
-    // Change these to shoot closer from player and just one
+    //////////SHOOTING//////////
     void TwinBuff()
     {
         Transform bulletTransform = playerBullet[0].GetComponent<Transform>();
         Vector3 tempPos = planeTransform.position;
-        tempPos.y = tempPos.y + 0.1f;
+        tempPos.y = tempPos.y + -0.1f;
         tempPos.x = tempPos.x + 2f;
         bulletTransform.position = tempPos;
 
@@ -196,7 +170,7 @@ public class Plane : MonoBehaviour
     {
         Transform bulletTransform = playerBullet[0].GetComponent<Transform>();
         Vector3 tempPos = planeTransform.position;
-        tempPos.y = tempPos.y - 0.3f;
+        tempPos.y = tempPos.y - 0.4f;
         tempPos.x = tempPos.x + 2;
         bulletTransform.position = tempPos;
 
@@ -212,19 +186,19 @@ public class Plane : MonoBehaviour
 
         if (buffCounts[0] == 0)
         {
-            yield return new WaitForSeconds(.8f);
+            yield return new WaitForSeconds(.5f);
             shot++;
         }
         else if (buffCounts[0] == 1)
         {
             sounds[1].Play();
-            yield return new WaitForSeconds(.6f);
+            yield return new WaitForSeconds(.4f);
             shot++;
         }
         else if (buffCounts[0] == 2)
         {
             sounds[1].Play();
-            yield return new WaitForSeconds(.4f);
+            yield return new WaitForSeconds(.3f);
             shot++;
         }
         else
@@ -234,139 +208,104 @@ public class Plane : MonoBehaviour
             shot++;
         }
     }
+    //////////SHOOTING//////////
 
     void OnTriggerEnter(Collider other)
     {
+        // Shrimps/Prawns
         if (other.tag == "Enemy")
         {
             Destroy(other.gameObject);
             Instantiate(explosions[1], other.transform.position, Quaternion.identity);
             sounds[3].Play();
-            shieldLevel--;
-            enemyKills[0]++;
+            shield = false;
+
+            if (shield == false && canDie == true)
+            {
+                sounds[0].Play();
+                Destroy(gameObject);
+                Instantiate(explosions[0], transform.position, Quaternion.identity);
+            }
+            else
+            {
+                canDie = true;
+                sounds[5].Play();
+            }
 
             int score = int.Parse(Main.scoreGT.text);
             score += 100;
             Main.scoreGT.text = score.ToString();
-
-            if (enemyKills[0] == 6)
-            {
-                GameObject powerUp = Instantiate(powerUpBuffs[0]);
-                powerUp.transform.position = other.transform.position;
-            }
-
-            if (shieldLevel == 0)
-            {
-                sounds[5].Play();
-            }
         }
 
+        // Jelly Fish
         if (other.tag == "Enemy_2")
         {
             Destroy(other.gameObject);
             Instantiate(explosions[1], other.transform.position, Quaternion.identity);
             sounds[3].Play();
-            shieldLevel--;
-            enemyKills[1]++;
+            shield = false;
+
+            if (shield == false && canDie == true)
+            {
+                sounds[0].Play();
+                Destroy(gameObject);
+                Instantiate(explosions[0], transform.position, Quaternion.identity);
+            }
+            else
+            {
+                canDie = true;
+                sounds[5].Play();
+            }
 
             int score = int.Parse(Main.scoreGT.text);
             score += 100;
             Main.scoreGT.text = score.ToString();
-
-            if (enemyKills[1] == 6)
-            {
-                GameObject powerUp = Instantiate(powerUpBuffs[0]);
-                powerUp.transform.position = other.transform.position;
-            }
-
-            if (shieldLevel == 0)
-            {
-                sounds[5].Play();
-            }
         }
 
-        if (other.tag == "Enemy_3")
+        // Pacu Fish
+        if (other.tag == "Pacu")
         {
-            Destroy(other.gameObject);
-            Instantiate(explosions[1], other.transform.position, Quaternion.identity);
-            sounds[3].Play();
-            shieldLevel--;
-            enemyKills[2]++;
-
-            int score = int.Parse(Main.scoreGT.text);
-            score += 100;
-            Main.scoreGT.text = score.ToString();
-
-            if (enemyKills[2] == 6)
-            {
-                GameObject powerUp = Instantiate(powerUpBuffs[1]);
-
-                //Instantiate(powerUp.transform, transform.position, Quaternion.identity);
-                // or
-                powerUp.transform.position = other.transform.position;
-            }
-
-            if (shieldLevel == 0)
-            {
-                sounds[5].Play();
-            }
-        }
-
-        if (other.tag == "Enemy_4")
-        {
-            Destroy(other.gameObject);
-            Instantiate(explosions[1], other.transform.position, Quaternion.identity);
-            sounds[3].Play();
-            shieldLevel--;
-            enemyKills[3]++;
-
-            int score = int.Parse(Main.scoreGT.text);
-            score += 100;
-            Main.scoreGT.text = score.ToString();
-
-            if (enemyKills[3] == 6)
-            {
-                GameObject powerUp = Instantiate(powerUpBuffs[2]);
-
-                //Instantiate(powerUp.transform, transform.position, Quaternion.identity);
-                // or
-                powerUp.transform.position = other.transform.position;
-            }
-
-            if (shieldLevel == 0)
-            {
-                sounds[5].Play();
-            }
-        }
-
-        if (other.tag == "Boss")
-        {
-            shieldLevel--;
+            shield = false;
             Boss.health--;
             sounds[4].Play();
 
-            if (shieldLevel == 0)
+            if (shield == false && canDie == true)
             {
+                sounds[0].Play();
+                Destroy(gameObject);
+                Instantiate(explosions[0], transform.position, Quaternion.identity);
+            }
+            else
+            {
+                canDie = true;
                 sounds[5].Play();
             }
         }
 
+        // Enemy Projectiles
         if (other.tag == "Enemy_Bullet")
         {
+            shield = false;
             Destroy(other.gameObject);
-            shieldLevel--;
 
-            if (shieldLevel == 0)
+            if (shield == false && canDie == true)
             {
+                sounds[0].Play();
+                Destroy(gameObject);
+                Instantiate(explosions[0], transform.position, Quaternion.identity);
+            }
+            else
+            {
+                canDie = true;
                 sounds[5].Play();
             }
         }
 
-        // Twin Power Up
+        // Twin Shot Power Up
         if (other.tag == "Twin Shot")
         {
             Destroy(other.gameObject);
-            powerUps[2] = true;
+            twinBuff = true;
             sounds[2].Play();
 
             int score = int.Parse(Main.scoreGT.text);
@@ -374,8 +313,8 @@ public class Plane : MonoBehaviour
             Main.scoreGT.text = score.ToString();
         }
 
-        // Tri Power Up changing to movementspeed buff
-        if (other.tag == "Tri Shot")
+        // Movement Speed Power Up
+        if (other.tag == "Movement Speed Buff")
         {
             Destroy(other.gameObject);
             buffCounts[1]++;
@@ -398,10 +337,12 @@ public class Plane : MonoBehaviour
             Main.scoreGT.text = score.ToString();
         }
 
+        // Shield Power Up
         if (other.tag == "Shield Buff")
         {
             Destroy(other.gameObject);
-            shieldLevel++;
+            shield = true;
+            canDie = false;
             sounds[2].Play();
 
             int score = int.Parse(Main.scoreGT.text);
@@ -410,6 +351,7 @@ public class Plane : MonoBehaviour
         }
     }
 
+    // On Death
     void OnDestroy()
     {
         Main.dead = true;
