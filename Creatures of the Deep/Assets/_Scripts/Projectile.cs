@@ -44,10 +44,15 @@ public class Projectile : MonoBehaviour
             sounds[0].Play();
         }
 
-        if (other.tag == "Enemy_2")
+        if (other.tag == "Enemy_Last")
         {
             sounds[0].Play();
         }
+
+		if (other.tag == "Enemy_2")
+		{
+			sounds[0].Play();
+		}
 
         if (other.tag == "Enemy_3")
         {

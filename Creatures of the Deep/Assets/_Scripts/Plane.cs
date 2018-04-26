@@ -5,9 +5,6 @@ using System.Linq;
 
 public class Plane : MonoBehaviour
 {
-    // Gets the Plane's Transform
-    public Transform planeTransform;
-
     // Health
     public bool shield;
     public bool canDie;
@@ -40,13 +37,6 @@ public class Plane : MonoBehaviour
     GameObject[] powerUpGOs = new GameObject[3];
     public static int buffCount = 0;
 
-    
-
-    void Awake()
-    {
-        planeTransform = GetComponent<Transform>();
-    }
-
     // Use this for initialization
     void Start()
     {
@@ -68,8 +58,16 @@ public class Plane : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Movement
-        Move();
+        if (Input.GetKeyDown(KeyCode.G))
+			{
+			print ("Weeee");
+			GetComponent<Rigidbody>().AddForce(Vector3.right * 200 * Time.deltaTime);
+			}
+		else
+		{
+			// Movement
+			Move();
+		}
 
         // Shield health
         if (shield)
@@ -79,23 +77,7 @@ public class Plane : MonoBehaviour
         else
         {
             powerUpGOs[2].SetActive(false);
-        }
-
-        // Restricts players movement
-        Vector3 currentPosition = transform.position;
-        float clampedX = Mathf.Clamp(currentPosition.x, -11f, 11f);
-        float clampedY = Mathf.Clamp(currentPosition.y, -7f, 7f);
-
-        if (!Mathf.Approximately(clampedX, currentPosition.x))
-        {
-            currentPosition.x = clampedX;
-            transform.position = currentPosition;
-        }
-        if (!Mathf.Approximately(clampedY, currentPosition.y))
-        {
-            currentPosition.y = clampedY;
-            transform.position = currentPosition;
-        }
+        }        
 
         if (Input.GetAxis("Jump") == 1 && shot > 0)
         {
@@ -146,6 +128,22 @@ public class Plane : MonoBehaviour
         }
         // Rotate the ship to make it feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * 30, 0, xAxis * -12);
+
+		// Restricts players movement
+		Vector3 currentPosition = transform.position;
+		float clampedX = Mathf.Clamp(currentPosition.x, -11f, 11f);
+		float clampedY = Mathf.Clamp(currentPosition.y, -7f, 7f);
+
+		if (!Mathf.Approximately(clampedX, currentPosition.x))
+		{
+			currentPosition.x = clampedX;
+			transform.position = currentPosition;
+		}
+		if (!Mathf.Approximately(clampedY, currentPosition.y))
+		{
+			currentPosition.y = clampedY;
+			transform.position = currentPosition;
+		}
     }
     //////////MOVEMENT//////////
 
@@ -153,7 +151,7 @@ public class Plane : MonoBehaviour
     void TwinBuff()
     {
         Transform bulletTransform = playerBullet[0].GetComponent<Transform>();
-        Vector3 tempPos = planeTransform.position;
+		Vector3 tempPos = transform.position;
         tempPos.y = tempPos.y + -0.1f;
         tempPos.x = tempPos.x + 2f;
         bulletTransform.position = tempPos;
@@ -169,7 +167,7 @@ public class Plane : MonoBehaviour
     IEnumerator Shoot()
     {
         Transform bulletTransform = playerBullet[0].GetComponent<Transform>();
-        Vector3 tempPos = planeTransform.position;
+		Vector3 tempPos = transform.position;
         tempPos.y = tempPos.y - 0.4f;
         tempPos.x = tempPos.x + 2;
         bulletTransform.position = tempPos;
@@ -236,6 +234,30 @@ public class Plane : MonoBehaviour
             score += 100;
             Main.scoreGT.text = score.ToString();
         }
+
+		if (other.tag == "Enemy_Last")
+		{
+			Destroy(other.gameObject);
+			Instantiate(explosions[1], other.transform.position, Quaternion.identity);
+			sounds[3].Play();
+			shield = false;
+
+			if (shield == false && canDie == true)
+			{
+				sounds[0].Play();
+				Destroy(gameObject);
+				Instantiate(explosions[0], transform.position, Quaternion.identity);
+			}
+			else
+			{
+				canDie = true;
+				sounds[5].Play();
+			}
+
+			int score = int.Parse(Main.scoreGT.text);
+			score += 100;
+			Main.scoreGT.text = score.ToString();
+		}
 
         // Jelly Fish
         if (other.tag == "Enemy_2")
