@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Parallax : MonoBehaviour {
+public class Parallaxx : MonoBehaviour {
 
     // The scrolling foregrounds
     public GameObject[] panels;
