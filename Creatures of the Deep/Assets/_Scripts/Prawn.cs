@@ -6,7 +6,10 @@ public enum PrawnWaves
 {
 	wave_1,
 	wave_2,
-	wave_3
+	wave_3,
+    wave_4,
+    wave_5,
+    wave_6
 }
 
 public class Prawn : MonoBehaviour
@@ -14,21 +17,18 @@ public class Prawn : MonoBehaviour
 	public int health = 2;
 
 	public GameObject explosion;
-	public Transform myTransform;
 	public GameObject powerUpPrefab;
 
 	// Use this for initialization
 	void Start()
 	{
 		SetWave();
-
-		myTransform = transform;
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (transform.position.x <= -14.5f || transform.position.x >= 14.5f)
+		if (transform.position.x <= -14.5f || transform.position.x >= 15.5f)
 		{
 			Destroy (gameObject);
 		}
@@ -61,10 +61,76 @@ public class Prawn : MonoBehaviour
 		// Convert the score back to a string and display it
 		Main.scoreGT.text = score.ToString();
 
-		if (gameObject.tag == "Enemy Last")
-		{
-			GameObject powerUp = Instantiate (powerUpPrefab);
-			powerUp.transform.position = transform.position;
+		if (tag == "Prawn_1") {
+			Main.prawnKillCount [0]++;
+
+			if (Main.prawnKillCount [0] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_2") {
+			Main.prawnKillCount [1]++;
+
+			if (Main.prawnKillCount [1] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_3") {
+			Main.prawnKillCount [2]++;
+
+			if (Main.prawnKillCount [2] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_4") {
+			Main.prawnKillCount [3]++;
+
+			if (Main.prawnKillCount [3] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_5") {
+			Main.prawnKillCount [3]++;
+
+			if (Main.prawnKillCount [3] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_6") {
+			Main.prawnKillCount [4]++;
+
+			if (Main.prawnKillCount [4] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_7") {
+			Main.prawnKillCount [6]++;
+
+			if (Main.prawnKillCount [6] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+
+		if (tag == "Prawn_8") {
+			Main.prawnKillCount [7]++;
+
+			if (Main.prawnKillCount [7] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
 		}
 	}
 
@@ -76,7 +142,11 @@ public class Prawn : MonoBehaviour
 
 		else if (Main.prawnWaves == PrawnWaves.wave_2)
 			gameObject.GetComponent<Animator>().SetTrigger("Prawn_2");
-		else
+		else if (Main.prawnWaves == PrawnWaves.wave_3)
 			gameObject.GetComponent<Animator>().SetTrigger("Prawn_3");
-	}
+        else if (Main.prawnWaves == PrawnWaves.wave_4)
+            gameObject.GetComponent<Animator>().SetTrigger("Prawn_4");
+        else  
+            gameObject.GetComponent<Animator>().SetTrigger("Prawn_5");
+    }
 }

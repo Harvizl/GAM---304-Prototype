@@ -6,7 +6,7 @@ using System.Linq;
 public class Plane : MonoBehaviour
 {
     // Health
-    public bool shield;
+    public static bool shield;
     public bool canDie;
 
     // Audio
@@ -210,11 +210,11 @@ public class Plane : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // Shrimps/Prawns
-        if (other.tag == "Enemy")
+        // Shrimps
+		if (other.tag.Contains ("Shrimp"))
         {
-            Destroy(other.gameObject);
-            Instantiate(explosions[1], other.transform.position, Quaternion.identity);
+			other.SendMessage("Death");
+			Instantiate(explosions[1], other.transform.position, Quaternion.identity);
             sounds[3].Play();
             shield = false;
 
@@ -235,9 +235,10 @@ public class Plane : MonoBehaviour
             Main.scoreGT.text = score.ToString();
         }
 
-		if (other.tag == "Enemy_Last")
+		// Prawns
+		if (other.tag.Contains ("Prawn"))
 		{
-			Destroy(other.gameObject);
+			other.SendMessage("Death");
 			Instantiate(explosions[1], other.transform.position, Quaternion.identity);
 			sounds[3].Play();
 			shield = false;
@@ -259,30 +260,30 @@ public class Plane : MonoBehaviour
 			Main.scoreGT.text = score.ToString();
 		}
 
-        // Jelly Fish
-        if (other.tag == "Enemy_2")
-        {
-            Destroy(other.gameObject);
-            Instantiate(explosions[1], other.transform.position, Quaternion.identity);
-            sounds[3].Play();
-            shield = false;
+		//Jelly Fish
+		if (other.tag.Contains ("Jelly"))
+		{
+			other.SendMessage("Death");
+			Instantiate(explosions[1], other.transform.position, Quaternion.identity);
+			sounds[3].Play();
+			shield = false;
 
-            if (shield == false && canDie == true)
-            {
-                sounds[0].Play();
-                Destroy(gameObject);
-                Instantiate(explosions[0], transform.position, Quaternion.identity);
-            }
-            else
-            {
-                canDie = true;
-                sounds[5].Play();
-            }
+			if (shield == false && canDie == true)
+			{
+				sounds[0].Play();
+				Destroy(gameObject);
+				Instantiate(explosions[0], transform.position, Quaternion.identity);
+			}
+			else
+			{
+				canDie = true;
+				sounds[5].Play();
+			}
 
-            int score = int.Parse(Main.scoreGT.text);
-            score += 100;
-            Main.scoreGT.text = score.ToString();
-        }
+			int score = int.Parse(Main.scoreGT.text);
+			score += 100;
+			Main.scoreGT.text = score.ToString();
+		}
 
         // Pacu Fish
         if (other.tag == "Pacu")

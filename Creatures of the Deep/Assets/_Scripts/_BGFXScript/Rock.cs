@@ -10,9 +10,9 @@ public class Rock : MonoBehaviour {
 	void Update () 
 	{
 		transform.Translate (Vector3.left * moveSpeed * Time.deltaTime);
-		if (this.gameObject.transform.position.x < minX) 
+		if (gameObject.transform.position.x < minX) 
 		{
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 		}
 
 	}

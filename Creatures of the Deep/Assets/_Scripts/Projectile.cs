@@ -10,11 +10,9 @@ public class Projectile : MonoBehaviour
     
     void Start()
     {
-        GameObject enemyExplosionSound = GameObject.Find("Enemy_Explosion");
-        sounds[0] = enemyExplosionSound.GetComponent<AudioSource>();
-
-        GameObject enemyHitSound = GameObject.Find("Enemy_Hit");
-        sounds[1] = enemyHitSound.GetComponent<AudioSource>();
+        sounds[0] = GameObject.Find("Enemy_Explosion").GetComponent<AudioSource>();
+        
+        sounds[1] = GameObject.Find("Enemy_Hit").GetComponent<AudioSource>();
 
         plane = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         yAxis = plane.transform.position.y;
@@ -39,39 +37,16 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.tag.Contains ("Prawn") || other.tag.Contains ("Shrimp") || other.tag.Contains ("Jelly Fish"))
         {
             sounds[0].Play();
         }
-
-        if (other.tag == "Enemy_Last")
-        {
-            sounds[0].Play();
-        }
-
-		if (other.tag == "Enemy_2")
-		{
-			sounds[0].Play();
-		}
-
-        if (other.tag == "Enemy_3")
-        {
-            sounds[0].Play();
-        }
-
-        if (other.tag == "Enemy_4")
-        {
-            sounds[0].Play();
-        }
-
-        if (other.tag == "Boss")
+        if(other.tag.Contains ("Pacu") || other.tag.Contains ("Switch"))
         {
             sounds[1].Play();
         }
-
         if (other.tag == "Switch")
         {
-            sounds[1].Play();
             Switches.hp--;
             Destroy(gameObject);
             Debug.Log(Switches.hp.ToString());

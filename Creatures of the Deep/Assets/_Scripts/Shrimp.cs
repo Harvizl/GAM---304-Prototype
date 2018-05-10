@@ -11,74 +11,112 @@ public enum ShrimpWaves
 
 public class Shrimp : MonoBehaviour
 {
-    public int health = 1;
+	public int health = 1;
 
 	public GameObject explosion;
-    public Transform myTransform;
 	public GameObject powerUpPrefab;
 
-    // Use this for initialization
-    void Start()
-    {
-        SetWave();
+	// Use this for initialization
+	void Start ()
+	{
+		SetWave ();
+	}
 
-        myTransform = transform;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-		if (transform.position.x <= -14.5f || transform.position.x >= 14.5f)
-		{
+	// Update is called once per frame
+	void Update ()
+	{
+		if (transform.position.x <= -14 || transform.position.x >= 15.5f) {
 			Destroy (gameObject);
 		}
-    }
+	}
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Player_Bullet")
-        {
-            health--;
-            Destroy(other.gameObject);
+	void OnTriggerEnter (Collider other)
+	{
+		if (other.tag == "Player_Bullet") {
+			health--;
+			Destroy (other.gameObject);
+		
+			if (health == 0) {
+				Death ();
+			}
+		}
+	}
 
-            if (health == 0)
-            {
-                Death();
-            }
-        }
-    }
+	void Death ()
+	{
+		Destroy (gameObject);
 
-    void Death()
-    {
-		if (gameObject.tag == "Enemy Last")
-		{
-			GameObject powerUp = Instantiate (powerUpPrefab);
-			powerUp.transform.position = transform.position;
+		Instantiate (explosion, transform.position, Quaternion.identity);
+
+		// Parse the text of the scoreGT into an int
+		int score = int.Parse (Main.scoreGT.text);
+		score += 100;
+
+		// Convert the score back to a string and display it
+		Main.scoreGT.text = score.ToString ();
+
+		if (tag == "Shrimp_1") {
+			Main.shrimpKillCount [0]++;
+		
+			if (Main.shrimpKillCount [0] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
 		}
 
-        Destroy(gameObject);
+		if (tag == "Shrimp_2") {
+			Main.shrimpKillCount [1]++;
+		
+			if (Main.shrimpKillCount [1] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
 
-        Instantiate(explosion, transform.position, Quaternion.identity);
+		if (tag == "Shrimp_3") {
+			Main.shrimpKillCount [2]++;
+		
+			if (Main.shrimpKillCount [2] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
 
-        // Parse the text of the scoreGT into an int
-        int score = int.Parse(Main.scoreGT.text);
-        score += 100;
+		if (tag == "Shrimp_4") {
+			Main.shrimpKillCount [3]++;
 
-        // Convert the score back to a string and display it
-        Main.scoreGT.text = score.ToString();
+			if (Main.shrimpKillCount [3] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
 
+		if (tag == "Shrimp_5") {
+			Main.shrimpKillCount [4]++;
 
-    }
+			if (Main.shrimpKillCount [4] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
 
-    void SetWave()
-    {
+		if (tag == "Shrimp_6") {
+			Main.shrimpKillCount [5]++;
+
+			if (Main.shrimpKillCount [5] == 6) {
+				GameObject powerUp = Instantiate (powerUpPrefab);
+				powerUp.transform.position = transform.position;
+			}
+		}
+	}
+
+	void SetWave ()
+	{
 		if (Main.shrimpWaves == ShrimpWaves.wave_1)
-
-            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_1");
-
-        else if (Main.shrimpWaves == ShrimpWaves.wave_2)
-            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_2");
-        else
-            gameObject.GetComponent<Animator>().SetTrigger("Shrimp_3");
-    }
+			gameObject.GetComponent<Animator> ().SetTrigger ("Shrimp_1");
+		else if (Main.shrimpWaves == ShrimpWaves.wave_2)
+			gameObject.GetComponent<Animator> ().SetTrigger ("Shrimp_2");
+		else
+			gameObject.GetComponent<Animator> ().SetTrigger ("Shrimp_3");
+	}
 }
