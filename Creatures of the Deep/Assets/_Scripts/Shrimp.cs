@@ -28,7 +28,11 @@ public class Shrimp : MonoBehaviour
 		if (transform.position.x <= -14 || transform.position.x >= 15.5f) {
 			Destroy (gameObject);
 		}
-	}
+
+        float yAxis = transform.position.y;
+        float xAxis = transform.position.x;
+        transform.rotation = Quaternion.Euler(yAxis * 30, 0, xAxis * -12);
+    }
 
 	void OnTriggerEnter (Collider other)
 	{
